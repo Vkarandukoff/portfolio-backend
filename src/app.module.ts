@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './models/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
@@ -24,7 +24,7 @@ import * as Entities from './entities/index';
       synchronize: false,
     }),
     AuthModule,
-    UsersModule,
+    UserModule,
   ],
   controllers: [],
   providers: [AppService],

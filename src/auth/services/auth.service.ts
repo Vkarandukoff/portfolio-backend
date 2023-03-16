@@ -4,7 +4,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { UsersService } from '../../users/users.service';
+import { UserService } from '../../models/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../../dtos/createUserDto';
 import * as bcrypt from 'bcrypt';
@@ -14,7 +14,7 @@ import { jwtConstants } from '../constants/constants';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private usersService: UserService,
     private jwtService: JwtService
   ) {}
 
@@ -34,16 +34,14 @@ export class AuthService {
       );
 
     const hashedPassword = await bcrypt.hash(password, 3);
-    const { id } = await this.usersService.createNewUser({
+    const { id: userId } = await this.usersService.createNewUser({
       username,
       password: hashedPassword,
     });
 
-    const tokens = await this.getTokens(id, username);
-    await this.usersService.updateRefreshToken(
-      id,
-      tokens.refreshToken
-    );
+    const tokens = await this.getTokens(userId, username);
+
+    await this.hashAndSaveRefreshToken(userId, tokens.refreshToken);
 
     return tokens;
   }
@@ -66,14 +64,8 @@ export class AuthService {
       throw new BadRequestException('Password is incorrect');
 
     const tokens = await this.getTokens(user.id, username);
-    const hashedRefreshToken = await bcrypt.hash(
-      tokens.refreshToken,
-      3
-    );
-    await this.usersService.updateRefreshToken(
-      user.id,
-      hashedRefreshToken
-    );
+
+    await this.hashAndSaveRefreshToken(user.id, tokens.refreshToken);
 
     return tokens;
   }
@@ -124,12 +116,21 @@ export class AuthService {
     if (!refreshTokenMatches)
       throw new ForbiddenException('Access denied');
 
-    const tokens = await this.getTokens(user.id, user.username);
-    await this.usersService.updateRefreshToken(
-      user.id,
-      tokens.refreshToken
-    );
+    const tokens = await this.getTokens(userId, user.username);
+
+    await this.hashAndSaveRefreshToken(userId, tokens.refreshToken);
 
     return tokens;
+  }
+
+  private async hashAndSaveRefreshToken(
+    userId: number,
+    refreshToken: string
+  ) {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 3);
+    return this.usersService.updateRefreshToken(
+      userId,
+      hashedRefreshToken
+    );
   }
 }

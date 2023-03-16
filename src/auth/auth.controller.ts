@@ -34,14 +34,14 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  @ApiBearerAuth('access')
+  @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   async logout(@Req() req: Request): Promise<UpdateResult> {
     return this.authService.logout(req.user['userId']);
   }
 
-  @ApiBearerAuth('refresh')
+  @ApiBearerAuth()
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
   refreshTokens(@Req() req: Request) {
