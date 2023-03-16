@@ -1,5 +1,5 @@
-import {Column, Entity} from 'typeorm';
-import {IntTimestampEntity} from './default/id.entity';
+import { Column, Entity } from 'typeorm';
+import { IntTimestampEntity } from './defaults/int-timestamp.entity';
 
 @Entity('user')
 export class UserEntity extends IntTimestampEntity {

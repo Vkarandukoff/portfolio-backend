@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { CreateUserDto } from '../dtos/createUserDto';
-import { LoginUserDto } from '../dtos/loginUserDto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { LoginUserDto } from './dtos/login-user.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { Request } from 'express';
 import { UpdateResult } from 'typeorm';

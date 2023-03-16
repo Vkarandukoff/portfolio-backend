@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../../entities';
+import { UserEntity } from '../../../entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -8,8 +8,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>
-  ) {
-  }
+  ) {}
 
   public async createNewUser(
     user: Partial<UserEntity>
@@ -40,6 +39,6 @@ export class UserService {
   }
 
   public async deleteProfileById(userId) {
-    return this.userRepository.delete({ id: userId })
+    return this.userRepository.delete({ id: userId });
   }
 }

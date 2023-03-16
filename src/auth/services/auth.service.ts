@@ -4,11 +4,11 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { UserService } from '../../models/user/user.service';
+import { UserService } from '../../models/user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from '../../dtos/createUserDto';
+import { CreateUserDto } from '../dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { LoginUserDto } from '../../dtos/loginUserDto';
+import { LoginUserDto } from '../dtos/login-user.dto';
 import { jwtConstants } from '../constants/constants';
 
 @Injectable()
@@ -74,6 +74,25 @@ export class AuthService {
     return this.usersService.updateRefreshToken(userId, null);
   }
 
+  async refreshTokens(userId: number, refreshToken: string) {
+    const user = await this.usersService.findById(userId);
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException('Access Denied');
+
+    const refreshTokenMatches = await bcrypt.compare(
+      refreshToken,
+      user.refreshToken
+    );
+    if (!refreshTokenMatches)
+      throw new ForbiddenException('Access denied');
+
+    const tokens = await this.getTokens(userId, user.username);
+
+    await this.hashAndSaveRefreshToken(userId, tokens.refreshToken);
+
+    return tokens;
+  }
+
   public async getTokens(userId: number, username: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
@@ -102,25 +121,6 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
-  }
-
-  async refreshTokens(userId: number, refreshToken: string) {
-    const user = await this.usersService.findById(userId);
-    if (!user || !user.refreshToken)
-      throw new ForbiddenException('Access Denied');
-
-    const refreshTokenMatches = await bcrypt.compare(
-      refreshToken,
-      user.refreshToken
-    );
-    if (!refreshTokenMatches)
-      throw new ForbiddenException('Access denied');
-
-    const tokens = await this.getTokens(userId, user.username);
-
-    await this.hashAndSaveRefreshToken(userId, tokens.refreshToken);
-
-    return tokens;
   }
 
   private async hashAndSaveRefreshToken(

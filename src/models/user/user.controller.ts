@@ -4,7 +4,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 import { AccessTokenGuard } from '../../auth/guards/accessToken.guard';
 import { Request } from 'express';
 
