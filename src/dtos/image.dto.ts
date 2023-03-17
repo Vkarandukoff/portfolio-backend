@@ -1,41 +1,37 @@
 import { IntTimestampDto } from './defaults/int-timestamp.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserDto } from './user.dto';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ImageDto } from './image.dto';
 import { PortfolioDto } from './portfolio.dto';
 
-export class UserDto extends IntTimestampDto {
+export class ImageDto extends IntTimestampDto {
   @ApiProperty({
     type: String,
   })
-  @IsString()
   @IsNotEmpty()
-  username: string;
-
-  @ApiProperty({
-    type: String,
-  })
   @IsString()
-  @IsNotEmpty()
-  password: string;
+  name: string;
 
   @ApiProperty({
     type: String,
   })
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  refreshToken: string | null;
+  description: string | null;
 
   @ApiProperty({
-    type: ImageDto,
-    isArray: true,
+    type: String,
   })
-  images: ImageDto[];
+  @IsString()
+  comments: string | null;
+
+  @ApiProperty({
+    type: UserDto,
+  })
+  uploadedBy: UserDto;
 
   @ApiProperty({
     type: PortfolioDto,
-    isArray: true,
   })
-  portfolios: PortfolioDto[];
+  portfolio: PortfolioDto;
 }
