@@ -1,11 +1,10 @@
-import { Controller, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Req } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { UserService } from './services/user.service';
-import { AccessTokenGuard } from '../../auth/guards/accessToken.guard';
 import { Request } from 'express';
 
 @ApiTags('user')
@@ -14,7 +13,6 @@ export class UserController {
   constructor(public readonly userService: UserService) {}
 
   @ApiBearerAuth()
-  @UseGuards(AccessTokenGuard)
   @ApiOperation({ summary: 'should delete user profile' })
   @Delete('delete-profile')
   deleteProfile(@Req() req: Request) {

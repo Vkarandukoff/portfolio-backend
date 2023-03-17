@@ -31,13 +31,15 @@ export class Image extends IntTimestampEntity {
 
   @ManyToOne(() => User, ({ images }) => images)
   @JoinColumn({
-    name: 'uploaded_id',
+    name: 'uploaded_by',
     referencedColumnName: 'id',
     foreignKeyConstraintName: 'image_user_id_fk',
   })
   uploadedBy: User;
 
-  @ManyToOne(() => Portfolio, ({ images }) => images)
+  @ManyToOne(() => Portfolio, ({ images }) => images, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'portfolio_id',
     referencedColumnName: 'id',

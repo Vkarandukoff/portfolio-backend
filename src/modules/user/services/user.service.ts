@@ -20,20 +20,6 @@ export class UserService {
     return this.userRepository.findOneBy({ username });
   }
 
-  public async findById(userId: number): Promise<User | undefined> {
-    return this.userRepository.findOneBy({ id: userId });
-  }
-
-  public async updateRefreshToken(
-    userId: number,
-    refreshToken: string | null
-  ) {
-    return this.userRepository.update(
-      { id: userId },
-      { refreshToken }
-    );
-  }
-
   public async deleteProfileById(userId) {
     return this.userRepository.delete({ id: userId });
   }

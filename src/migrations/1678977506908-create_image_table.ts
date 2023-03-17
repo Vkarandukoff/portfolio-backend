@@ -69,6 +69,7 @@ export class createImageTable1678977506908
       columnNames: ['portfolio_id'],
       referencedTableName: 'portfolio',
       referencedColumnNames: ['id'],
+      onDelete: 'CASCADE',
     }),
   ];
 

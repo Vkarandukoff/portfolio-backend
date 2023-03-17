@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './models/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { PortfolioModule } from './modules/portfolio/portfolio.module';
+import { ImageModule } from './modules/image/image.module';
 
 import * as Entities from './entities/index';
 
@@ -25,8 +26,10 @@ import * as Entities from './entities/index';
     }),
     AuthModule,
     UserModule,
+    PortfolioModule,
+    ImageModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
