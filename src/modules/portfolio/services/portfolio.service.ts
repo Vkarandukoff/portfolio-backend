@@ -29,4 +29,31 @@ export class PortfolioService {
   public async deleteById(portfolioId: number) {
     return this.portfolioRepository.delete({ id: portfolioId });
   }
+
+  public async getAllWithImages() {
+    return this.portfolioRepository
+      .find({
+        relations: ['images'],
+        order: { createdAt: 'desc' },
+      })
+      .then((portfolios) => {
+        return portfolios.map(({ id, name, description, images }) => {
+          return {
+            id,
+            name,
+            description,
+            images: images.map(
+              ({ id, name, description, comments }) => {
+                return {
+                  id,
+                  name,
+                  description,
+                  comments,
+                };
+              }
+            ),
+          };
+        });
+      });
+  }
 }
