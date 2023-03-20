@@ -2,11 +2,14 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { ImageModule } from './modules/image/image.module';
-
+import { config } from 'dotenv';
 import * as Entities from './entities/index';
+
+config();
+const configService = new ConfigService();
 
 @Module({
   imports: [
@@ -15,11 +18,11 @@ import * as Entities from './entities/index';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      database: 'postgres',
-      username: 'postgres',
-      password: 'postgres',
+      host: configService.get('POSTGRES_HOST'),
+      port: +configService.get('POSTGRES_PORT'),
+      username: configService.get('POSTGRES_USER'),
+      password: configService.get('POSTGRES_PASSWORD'),
+      database: configService.get('POSTGRES_DB'),
       entities: Object.values(Entities),
       logging: false,
       synchronize: false,
