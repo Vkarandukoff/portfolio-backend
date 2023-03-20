@@ -14,6 +14,7 @@ export class ImageDto extends IntTimestampDto {
 
   @ApiProperty({
     type: String,
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -21,6 +22,7 @@ export class ImageDto extends IntTimestampDto {
 
   @ApiProperty({
     type: String,
+    required: false,
   })
   @IsString()
   comments: string | null;

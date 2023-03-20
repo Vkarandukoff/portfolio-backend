@@ -17,7 +17,10 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  public async signup({ username, password }: CreateUserDto) {
+  public async signup({
+    username,
+    password,
+  }: CreateUserDto): Promise<{ access_token: string }> {
     const candidate = await this.usersService.findByUserName(
       username
     );
@@ -32,10 +35,15 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return this.generateJwtToken(userId, username);
+    const token = await this.generateJwtToken(userId, username);
+
+    return { access_token: token };
   }
 
-  public async login({ username, password }: LoginUserDto) {
+  public async login({
+    username,
+    password,
+  }: LoginUserDto): Promise<{ access_token: string }> {
     const user = await this.usersService.findByUserName(username);
     if (!user)
       throw new BadRequestException(
@@ -49,14 +57,21 @@ export class AuthService {
     if (!passwordCorrect)
       throw new BadRequestException('Password is incorrect');
 
-    return await this.generateJwtToken(user.id, username);
+    const token = await this.generateJwtToken(user.id, username);
+
+    return { access_token: token };
   }
 
-  public async logout(token: string) {
-    return token;
+  public async logout(
+    token: string
+  ): Promise<{ access_token: string }> {
+    return { access_token: token };
   }
 
-  public async generateJwtToken(userId: number, username: string) {
+  public async generateJwtToken(
+    userId: number,
+    username: string
+  ): Promise<string> {
     return this.jwtService.signAsync(
       {
         userId,
