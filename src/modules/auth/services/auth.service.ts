@@ -62,12 +62,6 @@ export class AuthService {
     return { access_token: token };
   }
 
-  public async logout(
-    token: string
-  ): Promise<{ access_token: string }> {
-    return { access_token: token };
-  }
-
   public async generateJwtToken(
     userId: number,
     username: string
