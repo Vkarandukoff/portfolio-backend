@@ -27,7 +27,9 @@ export class Portfolio extends IntTimestampEntity {
   })
   description: string;
 
-  @ManyToOne(() => User, ({ portfolios }) => portfolios)
+  @ManyToOne(() => User, ({ portfolios }) => portfolios, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'created_by',
     referencedColumnName: 'id',

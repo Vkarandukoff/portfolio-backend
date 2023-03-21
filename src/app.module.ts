@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { ImageModule } from './modules/image/image.module';
-import { config } from 'dotenv';
 import * as Entities from './entities/index';
+import { config } from 'dotenv';
 
 config();
 const configService = new ConfigService();

@@ -52,6 +52,7 @@ export class createPortfolioTable1678975907350
       columnNames: ['created_by'],
       referencedTableName: 'user',
       referencedColumnNames: ['id'],
+      onDelete: 'CASCADE',
     }),
   ];
 

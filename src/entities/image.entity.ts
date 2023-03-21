@@ -29,7 +29,9 @@ export class Image extends IntTimestampEntity {
   })
   comments: string;
 
-  @ManyToOne(() => User, ({ images }) => images)
+  @ManyToOne(() => User, ({ images }) => images, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'uploaded_by',
     referencedColumnName: 'id',

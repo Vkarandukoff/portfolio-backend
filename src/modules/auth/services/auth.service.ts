@@ -8,13 +8,14 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from '../dtos/login-user.dto';
-import { jwtConstants } from '../constants/constants';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private configService: ConfigService
   ) {}
 
   public async signup({
@@ -72,7 +73,7 @@ export class AuthService {
         username,
       },
       {
-        secret: jwtConstants.accessSecretKey,
+        secret: this.configService.get('JWT_SECRET_ACCESS'),
         expiresIn: '30m',
       }
     );

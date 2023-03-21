@@ -1,4 +1,10 @@
-import { Controller, Delete, HttpStatus, Req } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  HttpStatus,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -8,7 +14,9 @@ import {
 import { UserService } from './services/user.service';
 import { Request } from 'express';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 
+@UseGuards(JwtGuard)
 @ApiTags('user')
 @Controller('user')
 export class UserController {

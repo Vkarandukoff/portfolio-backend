@@ -4,15 +4,19 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants/constants';
 import { AuthController } from './auth.controller';
+import { config } from 'dotenv';
+import { ConfigService } from '@nestjs/config';
+
+config();
+const configService = new ConfigService();
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.accessSecretKey,
+      secret: configService.get('JWT_SECRET_ACCESS'),
       signOptions: { expiresIn: '30m' },
     }),
   ],

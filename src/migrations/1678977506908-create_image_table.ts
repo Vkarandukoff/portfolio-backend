@@ -63,6 +63,7 @@ export class createImageTable1678977506908
       columnNames: ['uploaded_by'],
       referencedTableName: 'user',
       referencedColumnNames: ['id'],
+      onDelete: 'CASCADE',
     }),
     new TableForeignKey({
       name: 'image_portfolio_id_fk',
