@@ -92,6 +92,14 @@ export class AuthService {
     return { access_token };
   }
 
+  public async googleLogin(user: Express.User) {
+    if (!user) {
+      return 'No user from google';
+    }
+
+    return user;
+  }
+
   public async generateTokens(
     userId: number,
     username: string

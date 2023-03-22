@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 import { RefreshStrategy } from './strategies/refresh.strategy';
+import { GoogleOauthStrategy } from './strategies/google-oauth.strategy';
 
 config();
 const configService = new ConfigService();
@@ -24,6 +25,11 @@ const configService = new ConfigService();
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RefreshStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    RefreshStrategy,
+    GoogleOauthStrategy,
+  ],
 })
 export class AuthModule {}

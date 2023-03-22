@@ -13,7 +13,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const redisClient = createClient();
-  redisClient.connect().catch(console.error);
+  redisClient.connect().catch(Logger.error);
 
   const redisStore = new RedisStore({
     client: redisClient,

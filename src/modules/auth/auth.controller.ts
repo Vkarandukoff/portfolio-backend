@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   HttpStatus,
   Post,
   Query,
@@ -20,10 +21,11 @@ import {
   JwtTokensApiResponseDto,
 } from './dtos/swagger/jwt-tokens-api-response.dto';
 import { SuccessApiResponseDto } from './dtos/swagger/success.api-response.dto';
-import { RefreshJwtGuard } from './guards/refresh-jwt-guard.service';
+import { RefreshJwtGuard } from './guards/refresh-jwt-guard';
 import { AccessTokenType, TokensType } from './types/tokens.type';
-import { AccessJwtGuard } from './guards/access-jwt-guard.service';
+import { AccessJwtGuard } from './guards/access-jwt-guard';
 import { Request } from 'express';
+import { GoogleOauthGuard } from './guards/google-oauth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -80,5 +82,19 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Req() { user }: Request): Promise<AccessTokenType> {
     return this.authService.refresh(user);
+  }
+
+  @UseGuards(GoogleOauthGuard)
+  @ApiOperation({ summary: 'oauth with google profile' })
+  @Get('google')
+  googleAuth() {
+    return;
+  }
+
+  @UseGuards(GoogleOauthGuard)
+  @ApiOperation({ summary: 'oauth callback with google profile ' })
+  @Get('google/callback')
+  googleLogin(@Req() { user }: Request) {
+    return this.authService.googleLogin(user);
   }
 }

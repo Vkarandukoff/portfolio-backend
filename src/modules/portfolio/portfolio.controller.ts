@@ -19,7 +19,7 @@ import { PortfolioService } from './services/portfolio.service';
 import { CreatePortfolioDto } from './dtos/create-portfolio.dto';
 import { Request } from 'express';
 import { DeletePortfolioDto } from './dtos/delete-portfolio.dto';
-import { AccessJwtGuard } from '../auth/guards/access-jwt-guard.service';
+import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
 import { FeedApiResponseDto } from './dtos/swagger/feed.api-response.dto';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { CreatePortfolioApiResponseDto } from './dtos/swagger/create-portfolio.api-response.dto';

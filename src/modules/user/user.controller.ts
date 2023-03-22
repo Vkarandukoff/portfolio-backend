@@ -14,7 +14,7 @@ import {
 import { UserService } from './services/user.service';
 import { Request } from 'express';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
-import { AccessJwtGuard } from '../auth/guards/access-jwt-guard.service';
+import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
 
 @UseGuards(AccessJwtGuard)
 @ApiTags('user')

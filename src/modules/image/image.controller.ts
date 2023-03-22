@@ -18,7 +18,7 @@ import { UploadImageDto } from './dtos/upload-image.dto';
 import { Request } from 'express';
 import { ImageService } from './services/image.service';
 import { DeleteImageDto } from './dtos/delete-image.dto';
-import { AccessJwtGuard } from '../auth/guards/access-jwt-guard.service';
+import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { UploadImageApiResponseDto } from './dtos/swagger/upload-image.api-response.dto';
 

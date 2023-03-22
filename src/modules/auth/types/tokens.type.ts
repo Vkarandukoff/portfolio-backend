@@ -3,4 +3,4 @@ export type TokensType = {
   refresh_token: string;
 };
 
-export type AccessTokenType = Pick<TokensType, 'access_token'>
+export type AccessTokenType = Pick<TokensType, 'access_token'>;
