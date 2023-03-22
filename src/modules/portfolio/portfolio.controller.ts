@@ -72,7 +72,6 @@ export class PortfolioController {
     @Session() session: Record<string, any>
   ): Promise<FeedApiResponseDto[]> {
     session.visits = session.visits ? session.visits + 1 : 1;
-    // console.log({ id: session.id, visits: session.visits });
     console.log(req);
     return this.portfolioService.getAllWithImages();
   }
