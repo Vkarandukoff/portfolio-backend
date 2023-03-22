@@ -29,8 +29,9 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'should delete user profile' })
   @Delete('delete-profile')
-  deleteProfile(@Req() req: Request): Promise<SuccessApiResponseDto> {
-    const userId = req.user['userId'];
-    return this.userService.deleteProfileById(userId);
+  deleteProfile(
+    @Req() { user }: Request
+  ): Promise<SuccessApiResponseDto> {
+    return this.userService.deleteProfileById(user['userId']);
   }
 }

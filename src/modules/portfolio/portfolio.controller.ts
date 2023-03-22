@@ -7,7 +7,6 @@ import {
   Post,
   Query,
   Req,
-  Session,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -40,10 +39,9 @@ export class PortfolioController {
   @Post('create')
   create(
     @Body() body: CreatePortfolioDto,
-    @Req() req: Request
+    @Req() { user }: Request
   ): Promise<CreatePortfolioApiResponseDto> {
-    const userId = req.user['userId'];
-    return this.portfolioService.create(userId, body);
+    return this.portfolioService.create(user['userId'], body);
   }
 
   @ApiResponse({
@@ -67,12 +65,7 @@ export class PortfolioController {
   })
   @ApiOperation({ summary: 'should return all portfolios' })
   @Get('feed')
-  getAll(
-    @Req() req: Request,
-    @Session() session: Record<string, any>
-  ): Promise<FeedApiResponseDto[]> {
-    session.visits = session.visits ? session.visits + 1 : 1;
-    console.log(req);
+  getAll(): Promise<FeedApiResponseDto[]> {
     return this.portfolioService.getAllWithImages();
   }
 }

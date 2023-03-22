@@ -37,10 +37,9 @@ export class ImageController {
   @Post('upload')
   upload(
     @Body() body: UploadImageDto,
-    @Req() req: Request
+    @Req() { user }: Request
   ): Promise<UploadImageApiResponseDto> {
-    const userId = req.user['userId'];
-    return this.imageService.upload(userId, body);
+    return this.imageService.upload(user['userId'], body);
   }
 
   @ApiResponse({

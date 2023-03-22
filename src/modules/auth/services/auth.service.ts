@@ -9,7 +9,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { ConfigService } from '@nestjs/config';
-import { TokensType } from '../types/tokens.type';
+import { AccessTokenType, TokensType } from '../types/tokens.type';
 
 @Injectable()
 export class AuthService {
@@ -81,18 +81,15 @@ export class AuthService {
       .catch(() => ({ success: false }));
   }
 
-  public async refresh(
-    userId: number,
-    username: string
-  ): Promise<TokensType> {
-    const tokens = await this.generateTokens(userId, username);
+  public async refresh(user: Express.User): Promise<AccessTokenType> {
+    const [userId, username] = [user['userId'], user['username']];
 
-    await this.usersService.updateRefreshToken(
+    const { access_token } = await this.generateTokens(
       userId,
-      tokens.refresh_token
+      username
     );
 
-    return { ...tokens };
+    return { access_token };
   }
 
   public async generateTokens(

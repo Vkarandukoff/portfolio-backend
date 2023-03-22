@@ -10,3 +10,8 @@ export class JwtTokensApiResponseDto extends PickType(UserDto, [
   })
   accessToken: string;
 }
+
+export class AccessJwtTokenApiResponseDto extends PickType(
+  JwtTokensApiResponseDto,
+  ['accessToken']
+) {}
