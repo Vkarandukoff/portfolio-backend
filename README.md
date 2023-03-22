@@ -29,13 +29,11 @@ $ npm install
    ```
 
 ```bash
-# create db containers
+# create db container
 $ docker compose up -d
 
 # or start existing 
 $ docker start portfolio-backend-postgres-1
-#and
-$ docker start portfolio-backend-redis-1
 
    ```
 
