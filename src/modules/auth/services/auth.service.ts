@@ -9,6 +9,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { TokensType } from '../types/tokens.type';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
   public async signup({
     username,
     password,
-  }: CreateUserDto): Promise<{ access_token: string }> {
+  }: CreateUserDto): Promise<TokensType> {
     const candidate = await this.usersService.findByUserName(
       username
     );
@@ -36,15 +37,20 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const token = await this.generateJwtToken(userId, username);
+    const tokens = await this.generateTokens(userId, username);
 
-    return { access_token: token };
+    await this.usersService.updateRefreshToken(
+      userId,
+      tokens.refresh_token
+    );
+
+    return { ...tokens };
   }
 
   public async login({
     username,
     password,
-  }: LoginUserDto): Promise<{ access_token: string }> {
+  }: LoginUserDto): Promise<TokensType> {
     const user = await this.usersService.findByUserName(username);
     if (!user)
       throw new BadRequestException(
@@ -58,24 +64,67 @@ export class AuthService {
     if (!passwordCorrect)
       throw new BadRequestException('Password is incorrect');
 
-    const token = await this.generateJwtToken(user.id, username);
+    const tokens = await this.generateTokens(user.id, username);
 
-    return { access_token: token };
+    await this.usersService.updateRefreshToken(
+      user.id,
+      tokens.refresh_token
+    );
+
+    return { ...tokens };
   }
 
-  public async generateJwtToken(
+  public async logout(userId: number) {
+    return this.usersService
+      .updateRefreshToken(userId, null)
+      .then(() => ({ success: true }))
+      .catch(() => ({ success: false }));
+  }
+
+  public async refresh(
     userId: number,
     username: string
-  ): Promise<string> {
-    return this.jwtService.signAsync(
-      {
-        userId,
-        username,
-      },
-      {
-        secret: this.configService.get('JWT_SECRET_ACCESS'),
-        expiresIn: '30m',
-      }
+  ): Promise<TokensType> {
+    const tokens = await this.generateTokens(userId, username);
+
+    await this.usersService.updateRefreshToken(
+      userId,
+      tokens.refresh_token
     );
+
+    return { ...tokens };
+  }
+
+  public async generateTokens(
+    userId: number,
+    username: string
+  ): Promise<TokensType> {
+    const [access_token, refresh_token] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          userId,
+          username,
+        },
+        {
+          secret: this.configService.get('JWT_SECRET_ACCESS'),
+          expiresIn: this.configService.get('ACCESS_EXPIRES_IN'),
+        }
+      ),
+      this.jwtService.signAsync(
+        {
+          userId,
+          username,
+        },
+        {
+          secret: this.configService.get('JWT_SECRET_REFRESH'),
+          expiresIn: this.configService.get('REFRESH_EXPIRES_IN'),
+        }
+      ),
+    ]);
+
+    return {
+      access_token,
+      refresh_token,
+    };
   }
 }

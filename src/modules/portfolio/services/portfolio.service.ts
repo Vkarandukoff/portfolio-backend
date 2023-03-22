@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Portfolio } from '../../../entities';
 import { Repository } from 'typeorm';
 import { CreatePortfolioDto } from '../dtos/create-portfolio.dto';
+import { CreatePortfolioApiResponseDto } from '../dtos/swagger/create-portfolio.api-response.dto';
+import { SuccessApiResponseDto } from '../../auth/dtos/swagger/success.api-response.dto';
+import { FeedApiResponseDto } from '../dtos/swagger/feed.api-response.dto';
 
 @Injectable()
 export class PortfolioService {
@@ -18,42 +21,52 @@ export class PortfolioService {
   public async create(
     userId: number,
     { name, description }: CreatePortfolioDto
-  ) {
-    return this.portfolioRepository.save({
-      name,
-      description,
-      createdBy: { id: userId },
-    });
+  ): Promise<CreatePortfolioApiResponseDto> {
+    return this.portfolioRepository
+      .save({
+        name,
+        description,
+        createdBy: { id: userId },
+      })
+      .then(({ id, name, description, createdAt }) => {
+        return {
+          id,
+          name,
+          description,
+          createdAt,
+        };
+      });
   }
 
-  public async deleteById(portfolioId: number) {
-    return this.portfolioRepository.delete({ id: portfolioId });
+  public async deleteById(
+    portfolioId: number
+  ): Promise<SuccessApiResponseDto> {
+    return this.portfolioRepository
+      .delete({ id: portfolioId })
+      .then(() => ({ success: true }))
+      .catch(() => ({ success: false }));
   }
 
-  public async getAllWithImages() {
+  public async getAllWithImages(): Promise<FeedApiResponseDto[]> {
     return this.portfolioRepository
       .find({
         relations: ['images'],
         order: { createdAt: 'desc' },
       })
-      .then((portfolios) => {
-        return portfolios.map(({ id, name, description, images }) => {
-          return {
-            id,
-            name,
-            description,
-            images: images.map(
-              ({ id, name, description, comments }) => {
-                return {
-                  id,
-                  name,
-                  description,
-                  comments,
-                };
-              }
-            ),
-          };
-        });
-      });
+      .then((portfolios) =>
+        portfolios.map(({ id, name, description, images }) => ({
+          id,
+          name,
+          description,
+          images: images.map(
+            ({ id, name, description, comments }) => ({
+              id,
+              name,
+              description,
+              comments,
+            })
+          ),
+        }))
+      );
   }
 }

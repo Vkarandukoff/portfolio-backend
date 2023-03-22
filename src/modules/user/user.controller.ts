@@ -14,9 +14,9 @@ import {
 import { UserService } from './services/user.service';
 import { Request } from 'express';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
-import { JwtGuard } from '../auth/guards/jwt.guard';
+import { AccessJwtGuard } from '../auth/guards/access-jwt-guard.service';
 
-@UseGuards(JwtGuard)
+@UseGuards(AccessJwtGuard)
 @ApiTags('user')
 @Controller('user')
 export class UserController {
@@ -29,7 +29,7 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'should delete user profile' })
   @Delete('delete-profile')
-  deleteProfile(@Req() req: Request) {
+  deleteProfile(@Req() req: Request): Promise<SuccessApiResponseDto> {
     const userId = req.user['userId'];
     return this.userService.deleteProfileById(userId);
   }

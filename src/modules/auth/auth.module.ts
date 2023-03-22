@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
+import { RefreshStrategy } from './strategies/refresh.strategy';
 
 config();
 const configService = new ConfigService();
@@ -17,11 +18,12 @@ const configService = new ConfigService();
     PassportModule,
     JwtModule.register({
       secret: configService.get('JWT_SECRET_ACCESS'),
-      signOptions: { expiresIn: '30m' },
+      signOptions: {
+        expiresIn: configService.get('ACCESS_EXPIRES_IN'),
+      },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, JwtStrategy, RefreshStrategy],
 })
 export class AuthModule {}

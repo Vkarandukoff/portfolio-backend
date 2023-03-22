@@ -22,6 +22,13 @@ export class User extends IntTimestampEntity {
   })
   password: string;
 
+  @Column({
+    name: 'refresh_token',
+    type: 'varchar',
+    nullable: true,
+  })
+  refreshToken: string;
+
   @OneToMany(() => Image, ({ uploadedBy }) => uploadedBy)
   images: Image[];
 

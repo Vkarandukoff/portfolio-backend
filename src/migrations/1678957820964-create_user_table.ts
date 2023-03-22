@@ -39,6 +39,11 @@ export class createUserTable1678957820964
       length: '100',
       isNullable: false,
     }),
+    new TableColumn({
+      name: 'refresh_token',
+      type: 'varchar',
+      isNullable: true,
+    }),
   ];
   readonly newTable: Table = new Table({
     name: this.tableName,

@@ -7,6 +7,7 @@ import {
   Post,
   Query,
   Req,
+  Session,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -19,9 +20,10 @@ import { PortfolioService } from './services/portfolio.service';
 import { CreatePortfolioDto } from './dtos/create-portfolio.dto';
 import { Request } from 'express';
 import { DeletePortfolioDto } from './dtos/delete-portfolio.dto';
-import { JwtGuard } from '../auth/guards/jwt.guard';
+import { AccessJwtGuard } from '../auth/guards/access-jwt-guard.service';
 import { FeedApiResponseDto } from './dtos/swagger/feed.api-response.dto';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
+import { CreatePortfolioApiResponseDto } from './dtos/swagger/create-portfolio.api-response.dto';
 
 @ApiTags('portfolio')
 @Controller('portfolio')
@@ -29,14 +31,17 @@ export class PortfolioController {
   constructor(public portfolioService: PortfolioService) {}
 
   @ApiResponse({
-    type: SuccessApiResponseDto,
+    type: CreatePortfolioApiResponseDto,
     status: HttpStatus.CREATED,
   })
   @ApiBearerAuth()
-  @UseGuards(JwtGuard)
+  @UseGuards(AccessJwtGuard)
   @ApiOperation({ summary: 'should create new user portfolio' })
   @Post('create')
-  create(@Body() body: CreatePortfolioDto, @Req() req: Request) {
+  create(
+    @Body() body: CreatePortfolioDto,
+    @Req() req: Request
+  ): Promise<CreatePortfolioApiResponseDto> {
     const userId = req.user['userId'];
     return this.portfolioService.create(userId, body);
   }
@@ -46,10 +51,12 @@ export class PortfolioController {
     status: HttpStatus.OK,
   })
   @ApiBearerAuth()
-  @UseGuards(JwtGuard)
+  @UseGuards(AccessJwtGuard)
   @ApiOperation({ summary: 'should delete portfolio' })
   @Delete('delete')
-  delete(@Query() { id }: DeletePortfolioDto) {
+  delete(
+    @Query() { id }: DeletePortfolioDto
+  ): Promise<SuccessApiResponseDto> {
     return this.portfolioService.deleteById(id);
   }
 
@@ -60,7 +67,13 @@ export class PortfolioController {
   })
   @ApiOperation({ summary: 'should return all portfolios' })
   @Get('feed')
-  getAll() {
+  getAll(
+    @Req() req: Request,
+    @Session() session: Record<string, any>
+  ): Promise<FeedApiResponseDto[]> {
+    session.visits = session.visits ? session.visits + 1 : 1;
+    // console.log({ id: session.id, visits: session.visits });
+    console.log(req);
     return this.portfolioService.getAllWithImages();
   }
 }
