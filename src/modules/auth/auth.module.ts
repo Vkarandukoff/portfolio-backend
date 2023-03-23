@@ -5,10 +5,10 @@ import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 import { RefreshStrategy } from './strategies/refresh.strategy';
 import { GoogleOauthStrategy } from './strategies/google-oauth.strategy';
+import { config } from 'dotenv';
 
 config();
 const configService = new ConfigService();

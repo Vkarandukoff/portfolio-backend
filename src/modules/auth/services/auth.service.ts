@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenType, TokensType } from '../types/tokens.type';
+import { GoogleUserInRequestType } from '../types/google.type';
 
 @Injectable()
 export class AuthService {
@@ -92,12 +93,37 @@ export class AuthService {
     return { access_token };
   }
 
-  public async googleLogin(user: Express.User) {
-    if (!user) {
-      return 'No user from google';
+  public async googleLogin({
+    provider,
+    providerId,
+    email,
+    name,
+    picture,
+  }: GoogleUserInRequestType) {
+    const user = await this.usersService.findByUserName(email);
+    if (user) {
+      return (
+        `<span>Welcome back!<span/>` +
+        `<img src="${picture}" alt="bebra">` +
+        `<h1>You autorised with ${provider}<h1/>` +
+        `<h2>Your provider id: ${providerId}<h2/>` +
+        `<h3>Your name: ${name}<h3/>` +
+        `<h4>Your email: ${email}<h4/>`
+      );
     }
-
-    return user;
+    await this.usersService.createNewUser({
+      username: email,
+      pictureUrl: picture,
+      provider,
+    });
+    return (
+      `<span>Hello new user!<span/>` +
+      `<img src="${picture}" alt="bebra">` +
+      `<h1>You autorised with ${provider}<h1/>` +
+      `<h2>Your provider id: ${providerId}<h2/>` +
+      `<h3>Your name: ${name}<h3/>` +
+      `<h4>Your email: ${email}<h4/>`
+    );
   }
 
   public async generateTokens(

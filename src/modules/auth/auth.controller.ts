@@ -26,6 +26,7 @@ import { AccessTokenType, TokensType } from './types/tokens.type';
 import { AccessJwtGuard } from './guards/access-jwt-guard';
 import { Request } from 'express';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { UserInRequestType } from './types/user-in-request.type';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -94,7 +95,7 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   @ApiOperation({ summary: 'oauth callback with google profile ' })
   @Get('google/callback')
-  googleLogin(@Req() { user }: Request) {
+  googleLogin(@Req() { user }: UserInRequestType) {
     return this.authService.googleLogin(user);
   }
 }
