@@ -39,4 +39,22 @@ export class UserDto extends IntTimestampDto {
   @IsOptional()
   @IsString()
   refreshToken: string;
+
+  @ApiProperty({
+    name: 'provider',
+    type: String,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  provider: string;
+
+  @ApiProperty({
+    name: 'picture_url',
+    type: String,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  pictureUrl: string;
 }

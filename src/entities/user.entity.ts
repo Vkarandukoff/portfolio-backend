@@ -18,7 +18,7 @@ export class User extends IntTimestampEntity {
     name: 'password',
     type: 'varchar',
     length: 100,
-    nullable: false,
+    nullable: true,
   })
   password: string;
 
@@ -28,6 +28,20 @@ export class User extends IntTimestampEntity {
     nullable: true,
   })
   refreshToken: string;
+
+  @Column({
+    name: 'provider',
+    type: 'varchar',
+    nullable: true,
+  })
+  provider: string;
+
+  @Column({
+    name: 'picture_url',
+    type: 'varchar',
+    nullable: true,
+  })
+  pictureUrl: string;
 
   @OneToMany(() => Image, ({ uploadedBy }) => uploadedBy)
   images: Image[];
