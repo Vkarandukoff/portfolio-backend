@@ -10,7 +10,9 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenType, TokensType } from '../types/tokens.type';
-import { GoogleUserInRequestType } from '../types/google.type';
+import { GoogleUserType } from '../types/google.type';
+import { User } from '../../../entities';
+import { UserType } from '../types/user-in-request.type';
 
 @Injectable()
 export class AuthService {
@@ -33,19 +35,12 @@ export class AuthService {
       );
 
     const hashedPassword = await bcrypt.hash(password, 3);
-    const { id: userId } = await this.usersService.createNewUser({
+    const user = await this.usersService.createNewUser({
       username,
       password: hashedPassword,
     });
 
-    const tokens = await this.generateTokens(userId, username);
-
-    await this.usersService.updateRefreshToken(
-      userId,
-      tokens.refresh_token
-    );
-
-    return { ...tokens };
+    return this.generateAndUpdateRefreshToken(user);
   }
 
   public async login({
@@ -57,6 +52,10 @@ export class AuthService {
       throw new BadRequestException(
         `User ${username} does not exist`
       );
+    if (user.provider)
+      throw new BadRequestException(
+        `Please login with ${user.provider}`
+      );
 
     const passwordCorrect = await bcrypt.compare(
       password,
@@ -65,14 +64,7 @@ export class AuthService {
     if (!passwordCorrect)
       throw new BadRequestException('Password is incorrect');
 
-    const tokens = await this.generateTokens(user.id, username);
-
-    await this.usersService.updateRefreshToken(
-      user.id,
-      tokens.refresh_token
-    );
-
-    return { ...tokens };
+    return this.generateAndUpdateRefreshToken(user);
   }
 
   public async logout(userId: number) {
@@ -82,9 +74,10 @@ export class AuthService {
       .catch(() => ({ success: false }));
   }
 
-  public async refresh(user: Express.User): Promise<AccessTokenType> {
-    const [userId, username] = [user['userId'], user['username']];
-
+  public async refresh({
+    userId,
+    username,
+  }: UserType): Promise<AccessTokenType> {
     const { access_token } = await this.generateTokens(
       userId,
       username
@@ -93,37 +86,22 @@ export class AuthService {
     return { access_token };
   }
 
-  public async googleLogin({
+  public async googleSignupOrLogin({
     provider,
-    providerId,
     email,
-    name,
     picture,
-  }: GoogleUserInRequestType) {
+  }: GoogleUserType) {
     const user = await this.usersService.findByUserName(email);
     if (user) {
-      return (
-        `<span>Welcome back!<span/>` +
-        `<img src="${picture}" alt="bebra">` +
-        `<h1>You autorised with ${provider}<h1/>` +
-        `<h2>Your provider id: ${providerId}<h2/>` +
-        `<h3>Your name: ${name}<h3/>` +
-        `<h4>Your email: ${email}<h4/>`
-      );
+      return this.generateAndUpdateRefreshToken(user);
     }
-    await this.usersService.createNewUser({
+    const newUser = await this.usersService.createNewUser({
       username: email,
       pictureUrl: picture,
       provider,
     });
-    return (
-      `<span>Hello new user!<span/>` +
-      `<img src="${picture}" alt="bebra">` +
-      `<h1>You autorised with ${provider}<h1/>` +
-      `<h2>Your provider id: ${providerId}<h2/>` +
-      `<h3>Your name: ${name}<h3/>` +
-      `<h4>Your email: ${email}<h4/>`
-    );
+
+    return this.generateAndUpdateRefreshToken(newUser);
   }
 
   public async generateTokens(
@@ -157,5 +135,16 @@ export class AuthService {
       access_token,
       refresh_token,
     };
+  }
+
+  public async generateAndUpdateRefreshToken(
+    user: User
+  ): Promise<TokensType> {
+    const tokens = await this.generateTokens(user.id, user.username);
+    await this.usersService.updateRefreshToken(
+      user.id,
+      tokens.refresh_token
+    );
+    return { ...tokens };
   }
 }

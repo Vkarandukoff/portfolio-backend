@@ -1,4 +1,4 @@
-export type GoogleUserInRequestType = {
+export type GoogleUserType = {
   provider: string;
   providerId: string;
   email: string;

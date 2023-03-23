@@ -26,7 +26,10 @@ import { AccessTokenType, TokensType } from './types/tokens.type';
 import { AccessJwtGuard } from './guards/access-jwt-guard';
 import { Request } from 'express';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
-import { UserInRequestType } from './types/user-in-request.type';
+import {
+  GoogleUserInRequestType,
+  UserInRequest,
+} from './types/user-in-request.type';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -81,7 +84,9 @@ export class AuthController {
     status: HttpStatus.CREATED,
   })
   @Post('refresh')
-  async refresh(@Req() { user }: Request): Promise<AccessTokenType> {
+  async refresh(
+    @Req() { user }: UserInRequest
+  ): Promise<AccessTokenType> {
     return this.authService.refresh(user);
   }
 
@@ -95,7 +100,7 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   @ApiOperation({ summary: 'oauth callback with google profile ' })
   @Get('google/callback')
-  googleLogin(@Req() { user }: UserInRequestType) {
-    return this.authService.googleLogin(user);
+  googleLogin(@Req() { user }: GoogleUserInRequestType) {
+    return this.authService.googleSignupOrLogin(user);
   }
 }
