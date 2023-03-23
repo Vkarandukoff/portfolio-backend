@@ -38,10 +38,10 @@ $ docker start portfolio-backend-postgres-1
    ```
 
 ```bash
-# normal mode
+# prod mode
 $ npm run start
 
-# or watch mode
+# or dev mode
 $ npm run start:dev
    ```
 
