@@ -24,7 +24,6 @@ import { SuccessApiResponseDto } from './dtos/swagger/success.api-response.dto';
 import { RefreshJwtGuard } from './guards/refresh-jwt-guard';
 import { AccessTokenType, TokensType } from './types/tokens.type';
 import { AccessJwtGuard } from './guards/access-jwt-guard';
-import { Request } from 'express';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import {
   GoogleUserInRequestType,
@@ -71,9 +70,9 @@ export class AuthController {
   })
   @Post('logout')
   async logout(
-    @Req() { user }: Request
+    @Req() { user }: UserInRequest
   ): Promise<SuccessApiResponseDto> {
-    return this.authService.logout(user['userId']);
+    return this.authService.logout(user.userId);
   }
 
   @ApiBearerAuth()

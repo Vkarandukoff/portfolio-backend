@@ -12,9 +12,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserService } from './services/user.service';
-import { Request } from 'express';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
+import { UserInRequest } from '../auth/types/user-in-request.type';
 
 @UseGuards(AccessJwtGuard)
 @ApiTags('user')
@@ -30,8 +30,8 @@ export class UserController {
   @ApiOperation({ summary: 'should delete user profile' })
   @Delete('delete-profile')
   deleteProfile(
-    @Req() { user }: Request
+    @Req() { user }: UserInRequest
   ): Promise<SuccessApiResponseDto> {
-    return this.userService.deleteProfileById(user['userId']);
+    return this.userService.deleteProfileById(user.userId);
   }
 }

@@ -54,7 +54,7 @@ export class AuthService {
       );
     if (user.provider)
       throw new BadRequestException(
-        `Please login with ${user.provider}`
+        `Please, login with ${user.provider}`
       );
 
     const passwordCorrect = await bcrypt.compare(
@@ -94,6 +94,11 @@ export class AuthService {
     const user = await this.usersService.findByUserName(email);
     if (user) {
       return this.generateAndUpdateRefreshToken(user);
+    }
+    if (!user.provider) {
+      throw new BadRequestException(
+        'Please, login with credentials!'
+      );
     }
     const newUser = await this.usersService.createNewUser({
       username: email,

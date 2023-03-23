@@ -15,12 +15,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UploadImageDto } from './dtos/upload-image.dto';
-import { Request } from 'express';
 import { ImageService } from './services/image.service';
 import { DeleteImageDto } from './dtos/delete-image.dto';
 import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { UploadImageApiResponseDto } from './dtos/swagger/upload-image.api-response.dto';
+import { UserInRequest } from '../auth/types/user-in-request.type';
 
 @ApiBearerAuth()
 @UseGuards(AccessJwtGuard)
@@ -37,9 +37,9 @@ export class ImageController {
   @Post('upload')
   upload(
     @Body() body: UploadImageDto,
-    @Req() { user }: Request
+    @Req() { user }: UserInRequest
   ): Promise<UploadImageApiResponseDto> {
-    return this.imageService.upload(user['userId'], body);
+    return this.imageService.upload(user.userId, body);
   }
 
   @ApiResponse({
