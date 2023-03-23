@@ -91,7 +91,7 @@ export class AuthController {
   }
 
   @UseGuards(GoogleOauthGuard)
-  @ApiOperation({ summary: 'oauth with google profile' })
+  @ApiOperation({ summary: 'signup or login with google profile' })
   @Get('google')
   googleAuth() {
     return;
