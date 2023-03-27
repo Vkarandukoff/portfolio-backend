@@ -1,11 +1,6 @@
 import { IntTimestampDto } from './defaults/int-timestamp.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserDto } from './user.dto';
 import { ImageDto } from './image.dto';
 
@@ -27,7 +22,6 @@ export class PortfolioDto extends IntTimestampDto {
   @ApiProperty({
     type: UserDto,
   })
-  @IsNumber()
   createdBy: UserDto;
 
   @ApiProperty({
