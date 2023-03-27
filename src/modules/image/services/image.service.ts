@@ -5,6 +5,7 @@ import { Image } from '../../../entities';
 import { Repository } from 'typeorm';
 import { PortfolioService } from '../../portfolio/services/portfolio.service';
 import { UploadImageApiResponseDto } from '../dtos/swagger/upload-image.api-response.dto';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class ImageService {
@@ -18,6 +19,8 @@ export class ImageService {
     userId: number,
     { name, description, comments, portfolioId }: UploadImageDto
   ): Promise<UploadImageApiResponseDto> {
+    if (isNil(name)) throw new BadRequestException('Name is necessary');
+
     const portfolio = await this.portfolioService.findById(portfolioId);
     if (!portfolio) throw new BadRequestException('Cannot find portfolio!');
 
@@ -39,6 +42,8 @@ export class ImageService {
   }
 
   public async deleteById(imageId: number) {
+    if (isNil(imageId)) throw new BadRequestException('Image id is necessary');
+
     return this.imageRepository
       .delete({ id: imageId })
       .then(() => ({ success: true }))

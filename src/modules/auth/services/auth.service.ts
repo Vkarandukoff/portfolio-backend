@@ -9,6 +9,7 @@ import { AccessTokenType, TokensType } from '../types/tokens.type';
 import { GoogleUserType } from '../types/google.type';
 import { User } from '../../../entities';
 import { UserType } from '../types/user-in-request.type';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,9 @@ export class AuthService {
   ) {}
 
   public async signup({ username, password }: CreateUserDto): Promise<TokensType> {
+    if (isNil(username) || isNil(password))
+      throw new BadRequestException('All fields are necessary');
+
     const candidate = await this.usersService.findByUserName(username);
     if (candidate) throw new ConflictException(`User: ${username} already exist. Please login!`);
 
@@ -32,6 +36,9 @@ export class AuthService {
   }
 
   public async login({ username, password }: LoginUserDto): Promise<TokensType> {
+    if (isNil(username) || isNil(password))
+      throw new BadRequestException('All fields are necessary');
+
     const user = await this.usersService.findByUserName(username);
     if (!user) throw new BadRequestException(`User ${username} does not exist`);
     if (user.provider) throw new BadRequestException(`Please, login with ${user.provider}`);

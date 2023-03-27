@@ -7,7 +7,7 @@ import { CreatePortfolioApiResponseDto } from '../dtos/swagger/create-portfolio.
 import { SuccessApiResponseDto } from '../../auth/dtos/swagger/success.api-response.dto';
 import { FeedApiResponseDto } from '../dtos/swagger/feed.api-response.dto';
 import { UpdatePortfolioDto } from '../dtos/update-portfolio.dto';
-import { isEmpty, isNil } from 'lodash';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class PortfolioService {
@@ -24,6 +24,8 @@ export class PortfolioService {
     userId: number,
     { name, description }: CreatePortfolioDto
   ): Promise<CreatePortfolioApiResponseDto> {
+    if (isNil(name)) throw new BadRequestException('Name is necessary');
+
     return this.portfolioRepository
       .save({
         name,
@@ -41,6 +43,8 @@ export class PortfolioService {
   }
 
   public async deleteById(portfolioId: number): Promise<SuccessApiResponseDto> {
+    if (isNil(portfolioId)) throw new BadRequestException('Portfolio id is necessary');
+
     return this.portfolioRepository
       .delete({ id: portfolioId })
       .then(() => ({ success: true }))
@@ -71,6 +75,8 @@ export class PortfolioService {
   }
 
   public async getOneWithImages(id: number): Promise<FeedApiResponseDto> {
+    if (isNil(id)) throw new BadRequestException('Portfolio id is necessary');
+
     return this.portfolioRepository
       .findOne({ where: { id }, relations: ['images', 'createdBy'] })
       .then(({ id, name, description, createdAt, createdBy, images }) => ({
