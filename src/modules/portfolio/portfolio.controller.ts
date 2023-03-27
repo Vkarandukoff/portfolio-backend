@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpStatus,
+  Param,
   Post,
   Query,
   Req,
@@ -63,9 +64,23 @@ export class PortfolioController {
     isArray: true,
     status: HttpStatus.OK,
   })
-  @ApiOperation({ summary: 'should return all portfolios' })
+  @ApiOperation({
+    summary: 'should return all portfolios with images',
+  })
   @Get('feed')
   getAll(): Promise<FeedApiResponseDto[]> {
     return this.portfolioService.getAllWithImages();
+  }
+
+  @ApiResponse({
+    type: FeedApiResponseDto,
+    status: HttpStatus.OK,
+  })
+  @Get(':id')
+  @ApiOperation({
+    summary: 'should return one portfolio with images',
+  })
+  withImages(@Param('id') id: number): Promise<FeedApiResponseDto> {
+    return this.portfolioService.getOneWithImages(id);
   }
 }

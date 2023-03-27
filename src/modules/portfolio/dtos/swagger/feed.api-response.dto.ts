@@ -13,7 +13,14 @@ export class FeedApiResponseDto extends PickType(PortfolioDto, [
   'id',
   'name',
   'description',
+  'createdAt',
 ]) {
+  @ApiProperty({
+    name: 'createdBy',
+    type: Number,
+  })
+  createdBy: number;
+
   @ApiProperty({
     name: 'images',
     type: Image,

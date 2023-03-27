@@ -50,14 +50,56 @@ export class PortfolioService {
   public async getAllWithImages(): Promise<FeedApiResponseDto[]> {
     return this.portfolioRepository
       .find({
-        relations: ['images'],
+        relations: ['images', 'createdBy'],
         order: { createdAt: 'desc' },
       })
       .then((portfolios) =>
-        portfolios.map(({ id, name, description, images }) => ({
+        portfolios.map(
+          ({
+            id,
+            name,
+            description,
+            images,
+            createdBy,
+            createdAt,
+          }) => ({
+            id,
+            name,
+            description,
+            createdBy: createdBy.id,
+            createdAt,
+            images: images.map(
+              ({ id, name, description, comments }) => ({
+                id,
+                name,
+                description,
+                comments,
+              })
+            ),
+          })
+        )
+      );
+  }
+
+  public async getOneWithImages(
+    id: number
+  ): Promise<FeedApiResponseDto> {
+    return this.portfolioRepository
+      .findOne({ where: { id }, relations: ['images', 'createdBy'] })
+      .then(
+        ({
           id,
           name,
           description,
+          createdAt,
+          createdBy,
+          images,
+        }) => ({
+          id,
+          name,
+          description,
+          createdAt,
+          createdBy: createdBy.id,
           images: images.map(
             ({ id, name, description, comments }) => ({
               id,
@@ -66,7 +108,7 @@ export class PortfolioService {
               comments,
             })
           ),
-        }))
+        })
       );
   }
 }
