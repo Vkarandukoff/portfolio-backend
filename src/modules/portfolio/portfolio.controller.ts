@@ -6,16 +6,12 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PortfolioService } from './services/portfolio.service';
 import { CreatePortfolioDto } from './dtos/create-portfolio.dto';
 import { DeletePortfolioDto } from './dtos/delete-portfolio.dto';
@@ -24,6 +20,7 @@ import { FeedApiResponseDto } from './dtos/swagger/feed.api-response.dto';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { CreatePortfolioApiResponseDto } from './dtos/swagger/create-portfolio.api-response.dto';
 import { UserInRequest } from '../auth/types/user-in-request.type';
+import { UpdatePortfolioDto } from './dtos/update-portfolio.dto';
 
 @ApiTags('portfolio')
 @Controller('portfolio')
@@ -53,9 +50,7 @@ export class PortfolioController {
   @UseGuards(AccessJwtGuard)
   @ApiOperation({ summary: 'should delete portfolio' })
   @Delete('delete')
-  delete(
-    @Query() { id }: DeletePortfolioDto
-  ): Promise<SuccessApiResponseDto> {
+  delete(@Query() { id }: DeletePortfolioDto): Promise<SuccessApiResponseDto> {
     return this.portfolioService.deleteById(id);
   }
 
@@ -84,5 +79,20 @@ export class PortfolioController {
   })
   withImages(@Param('id') id: number): Promise<FeedApiResponseDto> {
     return this.portfolioService.getOneWithImages(id);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessJwtGuard)
+  @ApiResponse({
+    type: SuccessApiResponseDto,
+    status: HttpStatus.CREATED,
+  })
+  @Put('update  ')
+  @ApiOperation({ summary: 'should partially update portfolio' })
+  update(
+    @Param('id') id: number,
+    @Body() body: UpdatePortfolioDto
+  ): Promise<SuccessApiResponseDto> {
+    return this.portfolioService.update(id, body);
   }
 }
