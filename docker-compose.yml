@@ -1,17 +1,36 @@
 version: '3.9'
 
 services:
+  app:
+    container_name: portfolio-backend
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app/
+      - /usr/src/app/node_modules
+    command: sh -c "npm run migration:run && npm run start:dev"
+    env_file:
+      - .env
+    network_mode: host
+    depends_on:
+      - postgres
   postgres:
-    image: postgres:alpine
+    image: postgres:15.2-alpine
+    restart: always
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-  redis:
-    image: redis:alpine
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - "6379:6379"
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+  app_data:
