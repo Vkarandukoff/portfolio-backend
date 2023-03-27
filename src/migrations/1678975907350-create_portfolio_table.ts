@@ -1,14 +1,6 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  TableColumn,
-  TableForeignKey,
-  Table,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey, Table } from 'typeorm';
 
-export class createPortfolioTable1678975907350
-  implements MigrationInterface
-{
+export class createPortfolioTable1678975907350 implements MigrationInterface {
   readonly tableName: string = 'portfolio';
   readonly tableColumns: TableColumn[] = [
     new TableColumn({

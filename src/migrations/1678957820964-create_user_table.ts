@@ -1,13 +1,6 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  TableColumn,
-  Table,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, TableColumn, Table } from 'typeorm';
 
-export class createUserTable1678957820964
-  implements MigrationInterface
-{
+export class createUserTable1678957820964 implements MigrationInterface {
   readonly tableName: string = 'user';
   readonly tableColumns: TableColumn[] = [
     new TableColumn({

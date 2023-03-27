@@ -5,10 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { GoogleProfileType } from '../types/google.type';
 
 @Injectable()
-export class GoogleOauthStrategy extends PassportStrategy(
-  Strategy,
-  'google'
-) {
+export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(private configService: ConfigService) {
     super({
       clientID: configService.get('GOOGLE_CLIENT_ID'),

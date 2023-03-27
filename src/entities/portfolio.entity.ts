@@ -1,11 +1,5 @@
 import { IntTimestampEntity } from './defaults/int-timestamp.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Image } from './image.entity';
 import { User } from './user.entity';
 

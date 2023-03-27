@@ -25,11 +25,6 @@ const configService = new ConfigService();
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    RefreshStrategy,
-    GoogleOauthStrategy,
-  ],
+  providers: [AuthService, JwtStrategy, RefreshStrategy, GoogleOauthStrategy],
 })
 export class AuthModule {}

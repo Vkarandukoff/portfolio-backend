@@ -1,9 +1,7 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { UserDto } from '../../../../dtos/user.dto';
 
-export class JwtTokensApiResponseDto extends PickType(UserDto, [
-  'refreshToken',
-]) {
+export class JwtTokensApiResponseDto extends PickType(UserDto, ['refreshToken']) {
   @ApiProperty({
     name: 'access_token',
     type: String,
@@ -11,7 +9,6 @@ export class JwtTokensApiResponseDto extends PickType(UserDto, [
   accessToken: string;
 }
 
-export class AccessJwtTokenApiResponseDto extends PickType(
-  JwtTokensApiResponseDto,
-  ['accessToken']
-) {}
+export class AccessJwtTokenApiResponseDto extends PickType(JwtTokensApiResponseDto, [
+  'accessToken',
+]) {}

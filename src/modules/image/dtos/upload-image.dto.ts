@@ -3,11 +3,7 @@ import { ImageDto } from '../../../dtos/image.dto';
 import { IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class UploadImageDto extends PickType(ImageDto, [
-  'name',
-  'description',
-  'comments',
-]) {
+export class UploadImageDto extends PickType(ImageDto, ['name', 'description', 'comments']) {
   @ApiProperty({
     type: Number,
   })

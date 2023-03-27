@@ -15,25 +15,15 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  public async updateRefreshToken(
-    userId: number,
-    refreshToken: string | null
-  ) {
-    return this.userRepository.update(
-      { id: userId },
-      { refreshToken }
-    );
+  public async updateRefreshToken(userId: number, refreshToken: string | null) {
+    return this.userRepository.update({ id: userId }, { refreshToken });
   }
 
-  public async findByUserName(
-    username: string
-  ): Promise<User | undefined> {
+  public async findByUserName(username: string): Promise<User | undefined> {
     return this.userRepository.findOneBy({ username });
   }
 
-  public async deleteProfileById(
-    userId
-  ): Promise<SuccessApiResponseDto> {
+  public async deleteProfileById(userId): Promise<SuccessApiResponseDto> {
     return this.userRepository
       .delete({ id: userId })
       .then(() => ({ success: true }))

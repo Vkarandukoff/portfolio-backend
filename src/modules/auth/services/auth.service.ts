@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -22,17 +18,9 @@ export class AuthService {
     private configService: ConfigService
   ) {}
 
-  public async signup({
-    username,
-    password,
-  }: CreateUserDto): Promise<TokensType> {
-    const candidate = await this.usersService.findByUserName(
-      username
-    );
-    if (candidate)
-      throw new ConflictException(
-        `User: ${username} already exist. Please login!`
-      );
+  public async signup({ username, password }: CreateUserDto): Promise<TokensType> {
+    const candidate = await this.usersService.findByUserName(username);
+    if (candidate) throw new ConflictException(`User: ${username} already exist. Please login!`);
 
     const hashedPassword = await bcrypt.hash(password, 3);
     const user = await this.usersService.createNewUser({
@@ -43,26 +31,13 @@ export class AuthService {
     return this.generateAndUpdateRefreshToken(user);
   }
 
-  public async login({
-    username,
-    password,
-  }: LoginUserDto): Promise<TokensType> {
+  public async login({ username, password }: LoginUserDto): Promise<TokensType> {
     const user = await this.usersService.findByUserName(username);
-    if (!user)
-      throw new BadRequestException(
-        `User ${username} does not exist`
-      );
-    if (user.provider)
-      throw new BadRequestException(
-        `Please, login with ${user.provider}`
-      );
+    if (!user) throw new BadRequestException(`User ${username} does not exist`);
+    if (user.provider) throw new BadRequestException(`Please, login with ${user.provider}`);
 
-    const passwordCorrect = await bcrypt.compare(
-      password,
-      user.password
-    );
-    if (!passwordCorrect)
-      throw new BadRequestException('Password is incorrect');
+    const passwordCorrect = await bcrypt.compare(password, user.password);
+    if (!passwordCorrect) throw new BadRequestException('Password is incorrect');
 
     return this.generateAndUpdateRefreshToken(user);
   }
@@ -74,31 +49,19 @@ export class AuthService {
       .catch(() => ({ success: false }));
   }
 
-  public async refresh({
-    userId,
-    username,
-  }: UserType): Promise<AccessTokenType> {
-    const { access_token } = await this.generateTokens(
-      userId,
-      username
-    );
+  public async refresh({ userId, username }: UserType): Promise<AccessTokenType> {
+    const { access_token } = await this.generateTokens(userId, username);
 
     return { access_token };
   }
 
-  public async googleSignupOrLogin({
-    provider,
-    email,
-    picture,
-  }: GoogleUserType) {
+  public async googleSignupOrLogin({ provider, email, picture }: GoogleUserType) {
     const user = await this.usersService.findByUserName(email);
     if (user) {
       return this.generateAndUpdateRefreshToken(user);
     }
     if (!user.provider) {
-      throw new BadRequestException(
-        'Please, login with credentials!'
-      );
+      throw new BadRequestException('Please, login with credentials!');
     }
     const newUser = await this.usersService.createNewUser({
       username: email,
@@ -109,10 +72,7 @@ export class AuthService {
     return this.generateAndUpdateRefreshToken(newUser);
   }
 
-  public async generateTokens(
-    userId: number,
-    username: string
-  ): Promise<TokensType> {
+  public async generateTokens(userId: number, username: string): Promise<TokensType> {
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -142,14 +102,9 @@ export class AuthService {
     };
   }
 
-  public async generateAndUpdateRefreshToken(
-    user: User
-  ): Promise<TokensType> {
+  public async generateAndUpdateRefreshToken(user: User): Promise<TokensType> {
     const tokens = await this.generateTokens(user.id, user.username);
-    await this.usersService.updateRefreshToken(
-      user.id,
-      tokens.refresh_token
-    );
+    await this.usersService.updateRefreshToken(user.id, tokens.refresh_token);
     return { ...tokens };
   }
 }

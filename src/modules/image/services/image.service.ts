@@ -18,11 +18,8 @@ export class ImageService {
     userId: number,
     { name, description, comments, portfolioId }: UploadImageDto
   ): Promise<UploadImageApiResponseDto> {
-    const portfolio = await this.portfolioService.findById(
-      portfolioId
-    );
-    if (!portfolio)
-      throw new BadRequestException('Cannot find portfolio!');
+    const portfolio = await this.portfolioService.findById(portfolioId);
+    if (!portfolio) throw new BadRequestException('Cannot find portfolio!');
 
     return this.imageRepository
       .save({

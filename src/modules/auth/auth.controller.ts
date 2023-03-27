@@ -1,19 +1,6 @@
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  Post,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, HttpStatus, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
-import {
-  ApiTags,
-  ApiResponse,
-  ApiBearerAuth,
-  ApiOperation,
-} from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { LoginUserDto } from './dtos/login-user.dto';
 import {
@@ -25,10 +12,7 @@ import { RefreshJwtGuard } from './guards/refresh-jwt-guard';
 import { AccessTokenType, TokensType } from './types/tokens.type';
 import { AccessJwtGuard } from './guards/access-jwt-guard';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
-import {
-  GoogleUserInRequestType,
-  UserInRequest,
-} from './types/user-in-request.type';
+import { GoogleUserInRequestType, UserInRequest } from './types/user-in-request.type';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -43,9 +27,7 @@ export class AuthController {
     summary: 'should create new user and return jwt tokens',
   })
   @Post('signup')
-  async signup(
-    @Query() createUserDto: CreateUserDto
-  ): Promise<TokensType> {
+  async signup(@Query() createUserDto: CreateUserDto): Promise<TokensType> {
     return this.authService.signup(createUserDto);
   }
 
@@ -55,9 +37,7 @@ export class AuthController {
   })
   @ApiOperation({ summary: 'should return jwt tokens' })
   @Post('login')
-  async login(
-    @Query() loginUserDto: LoginUserDto
-  ): Promise<TokensType> {
+  async login(@Query() loginUserDto: LoginUserDto): Promise<TokensType> {
     return this.authService.login(loginUserDto);
   }
 
@@ -69,9 +49,7 @@ export class AuthController {
     status: HttpStatus.CREATED,
   })
   @Post('logout')
-  async logout(
-    @Req() { user }: UserInRequest
-  ): Promise<SuccessApiResponseDto> {
+  async logout(@Req() { user }: UserInRequest): Promise<SuccessApiResponseDto> {
     return this.authService.logout(user.userId);
   }
 
@@ -83,9 +61,7 @@ export class AuthController {
     status: HttpStatus.CREATED,
   })
   @Post('refresh')
-  async refresh(
-    @Req() { user }: UserInRequest
-  ): Promise<AccessTokenType> {
+  async refresh(@Req() { user }: UserInRequest): Promise<AccessTokenType> {
     return this.authService.refresh(user);
   }
 
