@@ -72,6 +72,8 @@ export class PortfolioController {
     return this.portfolioService.getAllWithImages();
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AccessJwtGuard)
   @ApiResponse({
     type: FeedApiResponseDto,
     status: HttpStatus.OK,
