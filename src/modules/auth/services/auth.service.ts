@@ -67,9 +67,8 @@ export class AuthService {
     if (user) {
       return this.generateAndUpdateRefreshToken(user);
     }
-    if (!user.provider) {
-      throw new BadRequestException('Please, login with credentials!');
-    }
+    if (!user?.provider) throw new BadRequestException('Please, login with credentials!');
+
     const newUser = await this.usersService.createNewUser({
       username: email,
       pictureUrl: picture,

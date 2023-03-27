@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../../entities';
 import { Repository } from 'typeorm';
 import { SuccessApiResponseDto } from '../../auth/dtos/swagger/success.api-response.dto';
+import { UserInfoDto } from '../dtos/swagger/user-info.dto';
 
 @Injectable()
 export class UserService {
@@ -28,5 +29,9 @@ export class UserService {
       .delete({ id: userId })
       .then(() => ({ success: true }))
       .catch(() => ({ success: false }));
+  }
+
+  public async findById(userId: number): Promise<UserInfoDto> {
+    return this.userRepository.findOneBy({ id: userId });
   }
 }
