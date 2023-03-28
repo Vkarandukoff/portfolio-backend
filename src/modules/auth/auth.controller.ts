@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -8,11 +8,13 @@ import {
   JwtTokensApiResponseDto,
 } from './dtos/swagger/jwt-tokens-api-response.dto';
 import { SuccessApiResponseDto } from './dtos/swagger/success.api-response.dto';
-import { RefreshJwtGuard } from './guards/refresh-jwt-guard';
 import { AccessTokenType, TokensType } from './types/tokens.type';
 import { AccessJwtGuard } from './guards/access-jwt-guard';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { GoogleUserInRequestType, UserInRequest } from './types/user-in-request.type';
+import { Response } from 'express';
+import { RefreshGuard } from './guards/refresh.guard';
+import { JwtRefreshCookieKey } from './constants/cookie-keys.constant';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,8 +29,13 @@ export class AuthController {
     summary: 'should create new user and return jwt tokens',
   })
   @Post('signup')
-  async signup(@Query() createUserDto: CreateUserDto): Promise<TokensType> {
-    return this.authService.signup(createUserDto);
+  async signup(
+    @Body() createUserDto: CreateUserDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<TokensType> {
+    const tokens = await this.authService.signup(createUserDto);
+    res.cookie(JwtRefreshCookieKey, tokens.refresh_token);
+    return tokens;
   }
 
   @ApiResponse({
@@ -37,8 +44,13 @@ export class AuthController {
   })
   @ApiOperation({ summary: 'should return jwt tokens' })
   @Post('login')
-  async login(@Query() loginUserDto: LoginUserDto): Promise<TokensType> {
-    return this.authService.login(loginUserDto);
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<TokensType> {
+    const tokens = await this.authService.login(loginUserDto);
+    res.cookie(JwtRefreshCookieKey, tokens.refresh_token);
+    return tokens;
   }
 
   @ApiBearerAuth()
@@ -49,12 +61,16 @@ export class AuthController {
     status: HttpStatus.CREATED,
   })
   @Post('logout')
-  async logout(@Req() { user }: UserInRequest): Promise<SuccessApiResponseDto> {
+  async logout(
+    @Req() { user }: UserInRequest,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<SuccessApiResponseDto> {
+    res.cookie(JwtRefreshCookieKey, '');
     return this.authService.logout(user.userId);
   }
 
   @ApiBearerAuth()
-  @UseGuards(RefreshJwtGuard)
+  @UseGuards(RefreshGuard)
   @ApiOperation({ summary: 'should refresh users jwt token' })
   @ApiResponse({
     type: AccessJwtTokenApiResponseDto,
@@ -75,7 +91,12 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   @ApiOperation({ summary: 'oauth callback with google profile ' })
   @Get('google/callback')
-  googleLogin(@Req() { user }: GoogleUserInRequestType) {
-    return this.authService.googleSignupOrLogin(user);
+  async googleLogin(
+    @Req() { user }: GoogleUserInRequestType,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const tokens = await this.authService.googleSignupOrLogin(user);
+    res.cookie(JwtRefreshCookieKey, tokens.refresh_token);
+    return tokens;
   }
 }

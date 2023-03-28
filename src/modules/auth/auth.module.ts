@@ -6,7 +6,6 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
-import { RefreshStrategy } from './strategies/refresh.strategy';
 import { GoogleOauthStrategy } from './strategies/google-oauth.strategy';
 import { config } from 'dotenv';
 
@@ -25,6 +24,6 @@ const configService = new ConfigService();
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RefreshStrategy, GoogleOauthStrategy],
+  providers: [AuthService, JwtStrategy, GoogleOauthStrategy],
 })
 export class AuthModule {}
