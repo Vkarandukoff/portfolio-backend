@@ -23,3 +23,12 @@ export class FeedApiResponseDto extends PickType(PortfolioDto, [
   })
   images: Image[];
 }
+
+export class PortfolioWithImagesDto extends PickType(PortfolioDto, ['id', 'name', 'description']) {
+  @ApiProperty({
+    name: 'images',
+    type: Image,
+    isArray: true,
+  })
+  images: Image[];
+}

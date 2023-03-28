@@ -16,7 +16,7 @@ import { PortfolioService } from './services/portfolio.service';
 import { CreatePortfolioDto } from './dtos/create-portfolio.dto';
 import { DeletePortfolioDto } from './dtos/delete-portfolio.dto';
 import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
-import { FeedApiResponseDto } from './dtos/swagger/feed.api-response.dto';
+import { FeedApiResponseDto, PortfolioWithImagesDto } from './dtos/swagger/feed.api-response.dto';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { CreatePortfolioApiResponseDto } from './dtos/swagger/create-portfolio.api-response.dto';
 import { UserInRequest } from '../auth/types/user-in-request.type';
@@ -42,16 +42,19 @@ export class PortfolioController {
     return this.portfolioService.create(user.userId, body);
   }
 
-  @ApiResponse({
-    type: SuccessApiResponseDto,
-    status: HttpStatus.OK,
-  })
   @ApiBearerAuth()
   @UseGuards(AccessJwtGuard)
-  @ApiOperation({ summary: 'should delete portfolio' })
-  @Delete('delete')
-  delete(@Query() { id }: DeletePortfolioDto): Promise<SuccessApiResponseDto> {
-    return this.portfolioService.deleteById(id);
+  @ApiResponse({
+    type: SuccessApiResponseDto,
+    status: HttpStatus.CREATED,
+  })
+  @Put('update')
+  @ApiOperation({ summary: 'should partially update portfolio' })
+  update(
+    @Param('id') id: number,
+    @Body() body: UpdatePortfolioDto
+  ): Promise<SuccessApiResponseDto> {
+    return this.portfolioService.update(id, body);
   }
 
   @ApiResponse({
@@ -70,10 +73,23 @@ export class PortfolioController {
   @ApiBearerAuth()
   @UseGuards(AccessJwtGuard)
   @ApiResponse({
+    type: PortfolioWithImagesDto,
+    isArray: true,
+    status: HttpStatus.OK,
+  })
+  @Get('all')
+  @ApiOperation({ summary: 'should return all users portfolios for one user' })
+  getUsersPortfolios(@Req() { user }: UserInRequest): Promise<PortfolioWithImagesDto[]> {
+    return this.portfolioService.getUsersPortfolios(user.userId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AccessJwtGuard)
+  @ApiResponse({
     type: FeedApiResponseDto,
     status: HttpStatus.OK,
   })
-  @Get(':id')
+  @Get('get')
   @ApiOperation({
     summary: 'should return one portfolio with images',
   })
@@ -81,18 +97,15 @@ export class PortfolioController {
     return this.portfolioService.getOneWithImages(id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AccessJwtGuard)
   @ApiResponse({
     type: SuccessApiResponseDto,
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
   })
-  @Put('update  ')
-  @ApiOperation({ summary: 'should partially update portfolio' })
-  update(
-    @Param('id') id: number,
-    @Body() body: UpdatePortfolioDto
-  ): Promise<SuccessApiResponseDto> {
-    return this.portfolioService.update(id, body);
+  @ApiBearerAuth()
+  @UseGuards(AccessJwtGuard)
+  @ApiOperation({ summary: 'should delete portfolio' })
+  @Delete('delete')
+  delete(@Query() { id }: DeletePortfolioDto): Promise<SuccessApiResponseDto> {
+    return this.portfolioService.deleteById(id);
   }
 }

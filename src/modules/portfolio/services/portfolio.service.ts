@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { CreatePortfolioDto } from '../dtos/create-portfolio.dto';
 import { CreatePortfolioApiResponseDto } from '../dtos/swagger/create-portfolio.api-response.dto';
 import { SuccessApiResponseDto } from '../../auth/dtos/swagger/success.api-response.dto';
-import { FeedApiResponseDto } from '../dtos/swagger/feed.api-response.dto';
+import { FeedApiResponseDto, PortfolioWithImagesDto } from '../dtos/swagger/feed.api-response.dto';
 import { UpdatePortfolioDto } from '../dtos/update-portfolio.dto';
 import { isNil } from 'lodash';
 
@@ -114,5 +114,26 @@ export class PortfolioService {
       .update({ id }, fieldsForUpdate)
       .then(() => ({ success: true }))
       .catch(() => ({ success: false }));
+  }
+
+  public async getUsersPortfolios(userId: number): Promise<PortfolioWithImagesDto[]> {
+    return this.portfolioRepository
+      .find({
+        where: { createdBy: { id: userId } },
+        relations: ['images'],
+      })
+      .then((portfolios) => {
+        return portfolios.map(({ id, name, description, images }) => ({
+          id,
+          name,
+          description,
+          images: images.map(({ id, name, description, comments }) => ({
+            id,
+            name,
+            description,
+            comments,
+          })),
+        }));
+      });
   }
 }
