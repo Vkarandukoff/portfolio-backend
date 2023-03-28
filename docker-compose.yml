@@ -1,22 +1,22 @@
 version: '3.9'
 
 services:
-  app:
-    container_name: portfolio-backend
-    build:
-      dockerfile: Dockerfile
-      context: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - app_data:/usr/src/app/
-      - /usr/src/app/node_modules
-    command: sh -c "npm run migration:run && npm run start:dev"
-    env_file:
-      - .env
-    network_mode: host
-    depends_on:
-      - postgres
+  #  app:
+  #    container_name: portfolio-backend
+  #    build:
+  #      dockerfile: Dockerfile
+  #      context: .
+  #    ports:
+  #      - "3000:3000"
+  #    volumes:
+  #      - app_data:/usr/src/app/
+  #      - /usr/src/app/node_modules
+  #    command: sh -c "npm run migration:run && npm run start:dev"
+  #    env_file:
+  #      - .env
+  #    network_mode: host
+  #    depends_on:
+  #      - postgres
   postgres:
     image: postgres:15.2-alpine
     restart: always
@@ -33,4 +33,4 @@ services:
 
 volumes:
   pg_data:
-  app_data:
+#  app_data:
