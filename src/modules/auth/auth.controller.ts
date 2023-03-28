@@ -69,7 +69,6 @@ export class AuthController {
     return this.authService.logout(user.userId);
   }
 
-  @ApiBearerAuth()
   @UseGuards(RefreshGuard)
   @ApiOperation({ summary: 'should refresh users jwt token' })
   @ApiResponse({
