@@ -6,26 +6,28 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { ImageModule } from './modules/image/image.module';
 import * as Entities from './entities/index';
-import { config } from 'dotenv';
-
-config();
-const configService = new ConfigService();
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: configService.get('POSTGRES_HOST'),
-      port: +configService.get('POSTGRES_PORT'),
-      username: configService.get('POSTGRES_USER'),
-      password: configService.get('POSTGRES_PASSWORD'),
-      database: configService.get('POSTGRES_DB'),
-      entities: Object.values(Entities),
-      logging: false,
-      synchronize: false,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('POSTGRES_HOST'),
+        port: +configService.get('POSTGRES_PORT'),
+        username: configService.get('POSTGRES_USER'),
+        password: configService.get('POSTGRES_PASSWORD'),
+        database: configService.get('POSTGRES_DB'),
+        entities: Object.values(Entities),
+        logging: false,
+        synchronize: false,
+      }),
+      inject: [ConfigService],
+      dataSourceFactory: async (options) => new DataSource(options).initialize(),
     }),
     AuthModule,
     UserModule,

@@ -7,7 +7,7 @@ config();
 
 const configService = new ConfigService();
 
-export default new DataSource({
+export const DbSource = new DataSource({
   type: 'postgres',
   host: configService.get('POSTGRES_HOST'),
   port: +configService.get('POSTGRES_PORT'),
@@ -17,6 +17,4 @@ export default new DataSource({
   entities: Object.values(Entities),
   migrationsTableName: 'migrations_table',
   migrations: ['src/migrations/*.{ts,js}'],
-  logging: false,
-  synchronize: false,
 });
