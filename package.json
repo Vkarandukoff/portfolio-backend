@@ -21,7 +21,8 @@
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "migration:new": "tput setaf 2; echo \"Write name of the migration below\";tput sgr0; read NAME; npm run typeorm migration:create ./src/migrations/$NAME",
     "migration:run": "npm run typeorm migration:run -- -d src/configs/ormconfig.ts",
-    "migration:revert": "npm run typeorm migration:revert -- -d src/configs/ormconfig.ts"
+    "migration:revert": "npm run typeorm migration:revert -- -d src/configs/ormconfig.ts",
+    "deploy": "npm install && npm run migration:run && npm run build && npm run start"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
