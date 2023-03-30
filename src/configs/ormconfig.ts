@@ -9,11 +9,11 @@ const configService = new ConfigService();
 
 export default new DataSource({
   type: 'postgres',
-  host: configService.get('RDS_HOSTNAME'),
-  port: +configService.get('RDS_PORT'),
-  username: configService.get('RDS_USERNAME'),
-  password: configService.get('RDS_PASSWORD'),
-  database: configService.get('RDS_DB_NAME'),
+  host: configService.get('POSTGRES_HOST'),
+  port: +configService.get('POSTGRES_PORT'),
+  username: configService.get('POSTGRES_USER'),
+  password: configService.get('POSTGRES_PASSWORD'),
+  database: configService.get('POSTGRES_DB'),
   entities: Object.values(Entities),
   migrationsTableName: 'migrations_table',
   migrations: ['src/migrations/*.{ts,js}'],
