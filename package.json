@@ -8,8 +8,9 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "echo \"nameserver 8.8.8.8\" | sudo tee /etc/resolv.conf > /dev/null && nest start",
+    "start": "nest start",
     "start:dev": "nest start --watch",
+    "start:ec2": "echo \"nameserver 8.8.8.8\" | sudo tee /etc/resolv.conf > /dev/null && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint . --ext .ts",
