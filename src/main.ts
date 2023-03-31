@@ -4,6 +4,9 @@ import { AppModule } from './app.module';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import * as process from 'process';
+
+console.log(process.env);
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
