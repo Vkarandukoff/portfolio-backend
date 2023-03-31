@@ -5,7 +5,7 @@ import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 
-console.log('Opa pipeline chinazes');
+console.log('Hello ');
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
