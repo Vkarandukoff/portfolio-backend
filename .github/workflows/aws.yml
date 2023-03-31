@@ -1,0 +1,30 @@
+name: EC2 Pipeline
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential
+
+    - name: Deploy to EC2 instance
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /path/to/project
+          git pull
+          npm install
+          npm run build
