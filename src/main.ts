@@ -5,8 +5,6 @@ import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 
-console.log('New version aaaaaA!!!');
-
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
 
