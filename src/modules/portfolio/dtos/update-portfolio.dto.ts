@@ -1,5 +1,5 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { PortfolioDto } from '../../../dtos/portfolio.dto';
+import { PortfolioDto } from '@src/dtos/portfolio.dto';
 import { IsOptional, IsString } from 'class-validator';
 
 export class UpdatePortfolioDto extends PickType(PortfolioDto, ['description']) {

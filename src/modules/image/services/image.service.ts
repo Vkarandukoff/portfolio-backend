@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UploadImageDto } from '../dtos/upload-image.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Image } from '../../../entities';
+import { Image } from '@src/entities';
 import { Repository } from 'typeorm';
 import { PortfolioService } from '../../portfolio/services/portfolio.service';
 import { UploadImageApiResponseDto } from '../dtos/swagger/upload-image.api-response.dto';

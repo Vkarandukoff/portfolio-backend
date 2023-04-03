@@ -1,5 +1,5 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { ImageDto } from '../../../dtos/image.dto';
+import { ImageDto } from '@src/dtos/image.dto';
 import { IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 

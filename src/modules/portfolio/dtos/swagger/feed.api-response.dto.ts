@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { ImageDto } from '../../../../dtos/image.dto';
-import { PortfolioDto } from '../../../../dtos/portfolio.dto';
+import { ImageDto } from '@src/dtos/image.dto';
+import { PortfolioDto } from '@src/dtos/portfolio.dto';
 
 class Image extends PickType(ImageDto, ['id', 'name', 'description', 'comments']) {}
 

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Portfolio } from '../../../entities';
+import { Portfolio } from '@src/entities';
 import { Repository } from 'typeorm';
 import { CreatePortfolioDto } from '../dtos/create-portfolio.dto';
 import { CreatePortfolioApiResponseDto } from '../dtos/swagger/create-portfolio.api-response.dto';

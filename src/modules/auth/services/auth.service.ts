@@ -7,7 +7,7 @@ import { LoginUserDto } from '../dtos/login-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenType, TokensType } from '../types/tokens.type';
 import { GoogleUserType } from '../types/google.type';
-import { User } from '../../../entities';
+import { User } from '@src/entities';
 import { UserType } from '../types/user-in-request.type';
 import { isNil } from 'lodash';
 
