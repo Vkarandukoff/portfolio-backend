@@ -13,7 +13,7 @@ services:
   #      - /usr/src/app/node_modules
   #    command: sh -c "npm run migration:run && npm run start:dev"
   #    env_file:
-  #      - .env
+  #      - .env.development
   #    network_mode: host
   #    depends_on:
   #      - postgres
@@ -23,7 +23,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - .env
+      - .env.development
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
