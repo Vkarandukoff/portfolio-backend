@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const configService = await app.get(ConfigService);
-  console.log('test');
+
   const config = new DocumentBuilder()
     .setTitle('portfolio-backend')
     .setDescription('REST API for a portfolio publication site')
