@@ -1,12 +1,12 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "sourceType": "module"
+  "env": {
+    "node": true
   },
-  "plugins": [
-    "@typescript-eslint/eslint-plugin"
-  ],
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
@@ -17,6 +17,10 @@
   "rules": {
     "no-console": "warn",
     "semi": "error",
+    "quotes": [
+      "error",
+      "single"
+    ],
     "@typescript-eslint/no-explicit-any": "off"
   }
 }
