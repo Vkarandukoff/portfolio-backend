@@ -14,9 +14,11 @@ export class RefreshGuard extends AuthGuard('refresh-jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const refreshTokenFromCookie = request?.cookies[JwtRefreshCookieKey];
-    const refreshTokenFromHeaders = request?.headers?.authorization?.split(' ')[1];
+    const refreshTokenFromHeaders =
+      request?.headers?.authorization?.split(' ')[1];
 
-    if (isNil(refreshTokenFromCookie) && isNil(refreshTokenFromHeaders)) return false;
+    if (isNil(refreshTokenFromCookie) && isNil(refreshTokenFromHeaders))
+      return false;
 
     try {
       if (refreshTokenFromCookie) {

@@ -1,6 +1,20 @@
-import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './services/auth.service';
-import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { LoginUserDto } from './dtos/login-user.dto';
 import {
@@ -11,10 +25,16 @@ import { SuccessApiResponseDto } from './dtos/swagger/success.api-response.dto';
 import { AccessTokenType, TokensType } from './types/tokens.type';
 import { AccessJwtGuard } from './guards/access-jwt-guard';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
-import { GoogleUserInRequestType, UserInRequest } from './types/user-in-request.type';
+import {
+  GoogleUserInRequestType,
+  UserInRequest,
+} from './types/user-in-request.type';
 import { Response } from 'express';
 import { RefreshGuard } from './guards/refresh.guard';
-import { JwtRefreshCookieKey, JwtRefreshCookieMaxAge } from './constants/cookie-keys.constant';
+import {
+  JwtRefreshCookieKey,
+  JwtRefreshCookieMaxAge,
+} from './constants/cookie-keys.constant';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,7 +54,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ): Promise<TokensType> {
     const tokens = await this.authService.signup(createUserDto);
-    res.cookie(JwtRefreshCookieKey, tokens.refresh_token, { maxAge: JwtRefreshCookieMaxAge });
+    res.cookie(JwtRefreshCookieKey, tokens.refresh_token, {
+      maxAge: JwtRefreshCookieMaxAge,
+    });
     return tokens;
   }
 
@@ -49,7 +71,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ): Promise<TokensType> {
     const tokens = await this.authService.login(loginUserDto);
-    res.cookie(JwtRefreshCookieKey, tokens.refresh_token, { maxAge: JwtRefreshCookieMaxAge });
+    res.cookie(JwtRefreshCookieKey, tokens.refresh_token, {
+      maxAge: JwtRefreshCookieMaxAge,
+    });
     return tokens;
   }
 
@@ -96,7 +120,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ) {
     const tokens = await this.authService.googleSignupOrLogin(user);
-    res.cookie(JwtRefreshCookieKey, tokens.refresh_token, { maxAge: JwtRefreshCookieMaxAge });
+    res.cookie(JwtRefreshCookieKey, tokens.refresh_token, {
+      maxAge: JwtRefreshCookieMaxAge,
+    });
     return tokens;
   }
 }

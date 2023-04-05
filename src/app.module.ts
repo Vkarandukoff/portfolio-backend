@@ -29,7 +29,8 @@ import * as process from 'process';
         synchronize: false,
       }),
       inject: [ConfigService],
-      dataSourceFactory: async (options) => new DataSource(options).initialize(),
+      dataSourceFactory: async (options) =>
+        new DataSource(options).initialize(),
     }),
     AuthModule,
     UserModule,

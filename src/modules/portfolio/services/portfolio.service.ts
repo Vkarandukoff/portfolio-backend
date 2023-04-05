@@ -5,7 +5,10 @@ import { Repository } from 'typeorm';
 import { CreatePortfolioDto } from '../dtos/create-portfolio.dto';
 import { CreatePortfolioApiResponseDto } from '../dtos/swagger/create-portfolio.api-response.dto';
 import { SuccessApiResponseDto } from '../../auth/dtos/swagger/success.api-response.dto';
-import { FeedApiResponseDto, PortfolioWithImagesDto } from '../dtos/swagger/feed.api-response.dto';
+import {
+  FeedApiResponseDto,
+  PortfolioWithImagesDto,
+} from '../dtos/swagger/feed.api-response.dto';
 import { UpdatePortfolioDto } from '../dtos/update-portfolio.dto';
 import { isNil } from 'lodash';
 
@@ -43,7 +46,8 @@ export class PortfolioService {
   }
 
   public async deleteById(portfolioId: number): Promise<SuccessApiResponseDto> {
-    if (isNil(portfolioId)) throw new BadRequestException('Portfolio id is necessary');
+    if (isNil(portfolioId))
+      throw new BadRequestException('Portfolio id is necessary');
 
     return this.portfolioRepository
       .delete({ id: portfolioId })
@@ -58,19 +62,21 @@ export class PortfolioService {
         order: { createdAt: 'desc' },
       })
       .then((portfolios) =>
-        portfolios.map(({ id, name, description, images, createdBy, createdAt }) => ({
-          id,
-          name,
-          description,
-          createdBy: createdBy.id,
-          createdAt,
-          images: images.map(({ id, name, description, comments }) => ({
+        portfolios.map(
+          ({ id, name, description, images, createdBy, createdAt }) => ({
             id,
             name,
             description,
-            comments,
-          })),
-        }))
+            createdBy: createdBy.id,
+            createdAt,
+            images: images.map(({ id, name, description, comments }) => ({
+              id,
+              name,
+              description,
+              comments,
+            })),
+          })
+        )
       );
   }
 
@@ -104,7 +110,8 @@ export class PortfolioService {
     const portfolio = await this.portfolioRepository.findOneBy({
       id,
     });
-    if (isNil(portfolio)) throw new BadRequestException(`Cannot find portfolio with id: ${id}`);
+    if (isNil(portfolio))
+      throw new BadRequestException(`Cannot find portfolio with id: ${id}`);
 
     const fieldsForUpdate: Partial<Portfolio> = {
       name: name ?? portfolio.name,
@@ -116,7 +123,9 @@ export class PortfolioService {
       .catch(() => ({ success: false }));
   }
 
-  public async getUsersPortfolios(userId: number): Promise<PortfolioWithImagesDto[]> {
+  public async getUsersPortfolios(
+    userId: number
+  ): Promise<PortfolioWithImagesDto[]> {
     return this.portfolioRepository
       .find({
         where: { createdBy: { id: userId } },

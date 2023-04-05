@@ -1,5 +1,19 @@
-import { Body, Controller, Delete, HttpStatus, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpStatus,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UploadImageDto } from './dtos/upload-image.dto';
 import { ImageService } from './services/image.service';
 import { DeleteImageDto } from './dtos/delete-image.dto';

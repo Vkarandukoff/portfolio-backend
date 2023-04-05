@@ -11,12 +11,20 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PortfolioService } from './services/portfolio.service';
 import { CreatePortfolioDto } from './dtos/create-portfolio.dto';
 import { DeletePortfolioDto } from './dtos/delete-portfolio.dto';
 import { AccessJwtGuard } from '../auth/guards/access-jwt-guard';
-import { FeedApiResponseDto, PortfolioWithImagesDto } from './dtos/swagger/feed.api-response.dto';
+import {
+  FeedApiResponseDto,
+  PortfolioWithImagesDto,
+} from './dtos/swagger/feed.api-response.dto';
 import { SuccessApiResponseDto } from '../auth/dtos/swagger/success.api-response.dto';
 import { CreatePortfolioApiResponseDto } from './dtos/swagger/create-portfolio.api-response.dto';
 import { UserInRequest } from '../auth/types/user-in-request.type';
@@ -79,7 +87,9 @@ export class PortfolioController {
   })
   @Get('all')
   @ApiOperation({ summary: 'should return all users portfolios for one user' })
-  getUsersPortfolios(@Req() { user }: UserInRequest): Promise<PortfolioWithImagesDto[]> {
+  getUsersPortfolios(
+    @Req() { user }: UserInRequest
+  ): Promise<PortfolioWithImagesDto[]> {
     return this.portfolioService.getUsersPortfolios(user.userId);
   }
 
