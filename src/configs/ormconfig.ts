@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import * as Entities from '../entities';
 
-config();
+config({
+  path: '.env.development',
+});
 
 const configService = new ConfigService();
 
