@@ -13,7 +13,9 @@ import * as process from 'process';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV}`
+        : '.env.development',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
