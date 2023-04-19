@@ -25,24 +25,24 @@
 
 ```bash
 # install dependencies
-$ npm install
+npm install
    ```
 
 ```bash
 # create db container
-$ docker compose up -d
+docker compose up -d
 
 # or start existing 
-$ docker start portfolio-backend-postgres-1
+docker start portfolio-backend-postgres-1
 
    ```
 
 ```bash
 # prod mode
-$ npm run start
+npm run start:prod
 
 # or dev mode
-$ npm run start:dev
+npm run start:dev
    ```
 
 ## Open swagger
@@ -52,13 +52,13 @@ Open in your browser [http://localhost:3000/portfolio/api](http://localhost:3000
 ### Migrations
 
 ```bash
-$ npm run migration:new
+npm run migration:new
    ```
 
 ```bash
-$ npm run migration:run
+npm run migration:run
    ```
 
 ```bash
-$ npm run migration:revert
+npm run migration:revert
    ```
