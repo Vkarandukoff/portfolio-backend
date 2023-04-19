@@ -4,13 +4,14 @@ import { AppModule } from './app.module';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
-
   app.enableCors();
+  app.use(helmet());
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
