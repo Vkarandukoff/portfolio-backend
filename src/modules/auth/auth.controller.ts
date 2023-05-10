@@ -14,6 +14,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
   ApiOperation,
+  ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { LoginUserDto } from './dtos/login-user.dto';
@@ -112,6 +113,7 @@ export class AuthController {
     return;
   }
 
+  @ApiExcludeEndpoint()
   @UseGuards(GoogleOauthGuard)
   @ApiOperation({ summary: 'oauth callback with google profile ' })
   @Get('google/callback')
